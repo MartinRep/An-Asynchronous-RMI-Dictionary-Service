@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="An-Asynchronous-RMI-Dictionary-Service:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/An_Asynchronous_RMI_Dictionary_Service_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="An-Asynchronous-RMI-Dictionary-Service/web/Web" />
+    </root>
+  </artifact>
+</component>
