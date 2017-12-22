@@ -1,30 +1,28 @@
 package com.gmit.ie;
 
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Worker implements Runnable
 {
-	private BlockingQueue<Job> queue;
-	private Job job;
+	private ArrayBlockingQueue<Job> inQueue;
+	private ConcurrentHashMap<Integer, String> outQueue;
 	
-	public Worker(BlockingQueue<Job> queue, Job job)  
-	{
+	public Worker(ArrayBlockingQueue<Job> inQueue, ConcurrentHashMap<Integer, String> outQueue) {
 		super();
-		this.queue = queue;
-		this.job = job;
-	}
+		this.inQueue = inQueue;
+		this.outQueue = outQueue;
+	}	
 
 	@Override
 	public void run() 
 	{
 		try {
-			queue.put(job);
+			Job job = inQueue.take();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		// Call RMI method
+		// Output result to outQueue
 	}
-	
-	
-		
 }

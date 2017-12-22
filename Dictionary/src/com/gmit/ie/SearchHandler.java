@@ -67,7 +67,7 @@ public class SearchHandler extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/response");
+    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
         	request.setAttribute("word", word);
         	request.setAttribute("jobNumber", jobNumber);
         	dispatcher.forward(request,response);

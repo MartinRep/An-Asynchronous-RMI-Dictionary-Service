@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class SearchPollHandler
  */
-@WebServlet("/response")
+@WebServlet("/results")
 public class SearchPollHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static ConcurrentHashMap<Integer, String> outQueue; 
@@ -42,10 +42,12 @@ public class SearchPollHandler extends HttpServlet {
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
 		Job job = new Job(jobNumber, word);
-		String definition = outQueue.get(job);
-		if(definition != null)
+		
+		if(outQueue.contains(jobNumber))
 		{
 			//Display results
+			String definition = outQueue.get(jobNumber);
+			
 		} else
 		{
 			response.setIntHeader("Refresh", 10);
