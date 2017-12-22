@@ -30,10 +30,7 @@ public class SearchHandler extends HttpServlet {
 	public void init() throws ServletException {
 		ServletContext ctx = getServletContext(); //The servlet context is the application itself.
 		//Initialize JobWorersHandler singleton to share resorces across application
-		JobWorkerHandler.init(inQueue, outQueue);
-		//Reads the value from the <context-param> in web.xml. Any application scope variables 
-		//defined in the web.xml can be read in as follows:
-		//String environmentalVariable = ctx.getInitParameter("SOME_GLOBAL_OR_ENVIRONMENTAL_VARIABLE"); 
+		JobWorkerHandler.init(inQueue, outQueue); 
 	}
 	
 	/**
@@ -64,14 +61,15 @@ public class SearchHandler extends HttpServlet {
         	//Put job in a blocking queue
     		try {
 				inQueue.put(new Job(thisJobNumber, word));
+				//Redirect to result polling page
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
+				request.setAttribute("word", word);
+	        	request.setAttribute("jobNumber", thisJobNumber);
+	        	dispatcher.forward(request,response);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
-        	request.setAttribute("word", word);
-        	request.setAttribute("jobNumber", thisJobNumber);
-        	dispatcher.forward(request,response);
+    		
         }
         
 	}

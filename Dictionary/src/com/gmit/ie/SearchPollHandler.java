@@ -15,21 +15,21 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class SearchPollHandler
  */
 @WebServlet("/results")
-public class SearchPollHandler extends HttpServlet {
+public class SearchPollHandler extends HttpServlet 
+{
 	private static final long serialVersionUID = 1L;
 	private static ConcurrentHashMap<Integer, String> outQueue; 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchPollHandler() {
+    public SearchPollHandler() 
+    {
         super();
     }
 
 
 	public void init(ServletConfig config) throws ServletException 
-	{
-		outQueue = JobWorkerHandler.getOutQueue();
-	}
+	{}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -38,8 +38,8 @@ public class SearchPollHandler extends HttpServlet {
 		PrintWriter out  = response.getWriter();
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
-		
-		if(outQueue.contains(jobNumber))
+		outQueue = JobWorkerHandler.getOutQueue();
+		if(outQueue.containsKey(jobNumber))
 		{
 			//Display results
 			String definition = outQueue.get(jobNumber);
