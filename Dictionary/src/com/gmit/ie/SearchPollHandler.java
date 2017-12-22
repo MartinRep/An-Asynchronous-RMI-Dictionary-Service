@@ -2,6 +2,7 @@ package com.gmit.ie;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/response")
 public class SearchPollHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static ConcurrentHashMap<Integer, String> outQueue; 
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -28,8 +29,9 @@ public class SearchPollHandler extends HttpServlet {
 	/**
 	 * @see Servlet#init(ServletConfig)
 	 */
-	public void init(ServletConfig config) throws ServletException {
-		// TODO Auto-generated method stub
+	public void init(ServletConfig config) throws ServletException 
+	{
+		outQueue = JobWorkerHandler.getOutQueue();
 	}
 
 	/**
@@ -39,10 +41,18 @@ public class SearchPollHandler extends HttpServlet {
 		PrintWriter out  = response.getWriter();
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
-		response.setIntHeader("Refresh", 10);
-		out.printf("<p  align=\"center\">Looking for <b>%s</b>, please wait...</p>",word);
-		out.println();
-		out.printf("<p  align=\"center\">Job Number: <b>%d</b>, please wait...</p>",jobNumber);
+		Job job = new Job(jobNumber, word);
+		String definition = outQueue.get(job);
+		if(definition != null)
+		{
+			//Display results
+		} else
+		{
+			response.setIntHeader("Refresh", 10);
+			out.printf("<p  align=\"center\">Looking for <b>%s</b>, please wait...</p>",word);
+			out.println();
+			out.printf("<p  align=\"center\">Job Number: <b>%d</b></p>",jobNumber);			
+		}
 	}
 
 }

@@ -2,6 +2,8 @@ package com.gmit.ie;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -16,13 +18,18 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Dictionary
  */
-@WebServlet(asyncSupported = true, name = "job-server", description = "Word quering server", urlPatterns = { "/get" })
+@WebServlet(asyncSupported = true, name = "Find-definition", description = "Word quering server", urlPatterns = { "/get" })
 public class SearchHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static ArrayBlockingQueue<Job> inQueue = new ArrayBlockingQueue<>(10);
+	private static volatile int jobNumber = 0;
+	private static ConcurrentHashMap<Integer, String> outQueue = new ConcurrentHashMap<>();
+
        
 	public void init() throws ServletException {
 		ServletContext ctx = getServletContext(); //The servlet context is the application itself.
-		
+		//Initialize JobWorersHandler singleton to share resorces across application
+		JobWorkerHandler.init(inQueue, outQueue);
 		//Reads the value from the <context-param> in web.xml. Any application scope variables 
 		//defined in the web.xml can be read in as follows:
 		//String environmentalVariable = ctx.getInitParameter("SOME_GLOBAL_OR_ENVIRONMENTAL_VARIABLE"); 
@@ -40,7 +47,7 @@ public class SearchHandler extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		int thisJobNumber = 0;
 		response.setContentType("text/html");
         PrintWriter out  = response.getWriter();
         String word = request.getParameter("word");
@@ -48,15 +55,20 @@ public class SearchHandler extends HttpServlet {
         if(word == null) 
         {
             out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </form> </div>");
+            jobNumber++;
+            thisJobNumber = jobNumber;
         }
         else
         {
-			//Get singleton instance.
-        	//Put job in a blocking queue through singleton
-        	//redirect to waiting page with job number from singleton
-        	RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/response");
+        	//Put job in a blocking queue
+    		try {
+				inQueue.put(new Job(thisJobNumber, word));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/response");
         	request.setAttribute("word", word);
-        	int jobNumber = 123;
         	request.setAttribute("jobNumber", jobNumber);
         	dispatcher.forward(request,response);
         }
