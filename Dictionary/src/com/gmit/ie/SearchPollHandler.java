@@ -23,12 +23,9 @@ public class SearchPollHandler extends HttpServlet {
      */
     public SearchPollHandler() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see Servlet#init(ServletConfig)
-	 */
+
 	public void init(ServletConfig config) throws ServletException 
 	{
 		outQueue = JobWorkerHandler.getOutQueue();
@@ -41,19 +38,21 @@ public class SearchPollHandler extends HttpServlet {
 		PrintWriter out  = response.getWriter();
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
-		Job job = new Job(jobNumber, word);
 		
 		if(outQueue.contains(jobNumber))
 		{
 			//Display results
 			String definition = outQueue.get(jobNumber);
+			out.printf("<p  align=\"center\"><b>%s</b>: %s</p>",jobNumber, definition);
+			out.println();
+			out.printf("<p  align=\"center\"><button onclick=\"window.location.href='\'\">Home</button></p>",jobNumber);
 			
 		} else
 		{
 			response.setIntHeader("Refresh", 10);
 			out.printf("<p  align=\"center\">Looking for <b>%s</b>, please wait...</p>",word);
 			out.println();
-			out.printf("<p  align=\"center\">Job Number: <b>%d</b></p>",jobNumber);			
+			out.printf("<p  align=\"center\">Job Number: <b>%d</b></p>",jobNumber);
 		}
 	}
 

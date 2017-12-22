@@ -22,7 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SearchHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static ArrayBlockingQueue<Job> inQueue = new ArrayBlockingQueue<>(10);
-	private static volatile int jobNumber = 0;
+	private static int jobNumber = 0;
+	int thisJobNumber = 0;
 	private static ConcurrentHashMap<Integer, String> outQueue = new ConcurrentHashMap<>();
 
        
@@ -47,19 +48,19 @@ public class SearchHandler extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int thisJobNumber = 0;
 		response.setContentType("text/html");
         PrintWriter out  = response.getWriter();
         String word = request.getParameter("word");
         out.println("<h1  align=\"center\">Search Dictionary</h1>");
         if(word == null) 
         {
-            out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </form> </div>");
-            jobNumber++;
+        	jobNumber++;
             thisJobNumber = jobNumber;
+        	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </form> </div>");
         }
         else
         {
+        	System.out.println(thisJobNumber);
         	//Put job in a blocking queue
     		try {
 				inQueue.put(new Job(thisJobNumber, word));
@@ -69,10 +70,16 @@ public class SearchHandler extends HttpServlet {
 			}
     		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
         	request.setAttribute("word", word);
-        	request.setAttribute("jobNumber", jobNumber);
+        	request.setAttribute("jobNumber", thisJobNumber);
         	dispatcher.forward(request,response);
         }
         
+	}
+	
+	@Override
+	public void destroy()
+	{
+		JobWorkerHandler.Shutdown();
 	}
 
 }
