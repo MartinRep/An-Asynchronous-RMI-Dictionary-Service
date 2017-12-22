@@ -40,6 +40,6 @@ public class Worker implements Runnable
 	public String RMILookup(String word) throws MalformedURLException, RemoteException, NotBoundException
 	{
 		dictionaryService = (DictionaryService) Naming.lookup("rmi://localhost:1099/dictionaryServer");
-		return dictionaryService.lookup(word);
+		return dictionaryService.Lookup(word);
 	}
 }

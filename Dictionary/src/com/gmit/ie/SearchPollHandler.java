@@ -43,9 +43,9 @@ public class SearchPollHandler extends HttpServlet
 		{
 			//Display results
 			String definition = outQueue.get(jobNumber);
-			out.printf("<p  align=\"center\"><b>%s</b>: %s</p>",jobNumber, definition);
+			out.printf("<p  align=\"center\"><b>%s</b>: <div style=\"white-space: pre-wrap;\">%s</div></p>",word, definition);
 			out.println();
-			out.printf("<p  align=\"center\"><button onclick=\"window.location.href='\'\">Home</button></p>",jobNumber);
+			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
 			
 		} else
 		{

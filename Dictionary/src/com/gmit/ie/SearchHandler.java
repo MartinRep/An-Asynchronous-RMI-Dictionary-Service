@@ -36,9 +36,9 @@ public class SearchHandler extends HttpServlet {
 	/**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchHandler() {
+    public SearchHandler() 
+    {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
