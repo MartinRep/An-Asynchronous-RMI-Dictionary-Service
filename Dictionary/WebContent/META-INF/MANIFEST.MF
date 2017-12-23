@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Class-Path: com.gmit.ie
+Class-Path: ie.gmit.sw
 

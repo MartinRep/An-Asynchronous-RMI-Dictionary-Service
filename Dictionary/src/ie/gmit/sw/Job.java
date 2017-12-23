@@ -1,4 +1,8 @@
-package com.gmit.ie;
+package ie.gmit.sw;
+
+/*
+ * Model Class for Job
+ */
 
 public class Job 
 {

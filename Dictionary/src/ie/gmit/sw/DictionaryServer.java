@@ -1,8 +1,12 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+
+/*
+ * This is a Runner class for Dictionary server. Run it as Java application.
+ */
 
 public class DictionaryServer 
 {

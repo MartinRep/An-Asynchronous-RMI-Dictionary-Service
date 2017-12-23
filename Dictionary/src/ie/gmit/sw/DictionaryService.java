@@ -1,5 +1,6 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
+// Custom remote interface
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

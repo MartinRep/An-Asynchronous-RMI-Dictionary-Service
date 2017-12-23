@@ -1,4 +1,4 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -31,6 +31,7 @@ public class DbService {
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		StringBuilder definition = new StringBuilder();
 		String strLine;
+		//Processing the dict.txt. Words are all Capital and definitions are after "defn:"
 		while ((strLine = br.readLine()) != null)   {
 			if(isUpperCase(strLine))
 			{
@@ -45,6 +46,7 @@ public class DbService {
 					if(isUpperCase(defnLine))
 						{
 							System.out.println("Adding to map");
+							// Adding to hashmap
 							dictinary.put(word, definition.toString());
 							word = defnLine;
 							System.out.println("Word: "+word);
@@ -70,7 +72,7 @@ public class DbService {
 		System.out.println(dictinary.size()); 
 	}
 
-	
+	//Checking for all capitals. Means it is a word.
 	public static boolean isUpperCase(String s)
 	{
 	    if(s.length() == 0) return false;

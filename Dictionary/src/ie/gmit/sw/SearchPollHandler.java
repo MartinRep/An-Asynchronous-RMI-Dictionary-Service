@@ -1,4 +1,4 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,15 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class SearchPollHandler
+ * This servlet is called when Request is submitted and waiting for response from server.
+ * Simple if statment determines if result is back from server or not
  */
 @WebServlet("/results")
 public class SearchPollHandler extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
 	private static ConcurrentHashMap<Integer, String> outQueue; 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public SearchPollHandler() 
     {
         super();
@@ -33,11 +32,13 @@ public class SearchPollHandler extends HttpServlet
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * Get method receives Job number from SearchHandler after user enters input.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out  = response.getWriter();
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
+		// Synchs outQueue HashMap with the rest of the application through JobWorkerHandler Singleton 
 		outQueue = JobWorkerHandler.getOutQueue();
 		if(outQueue.containsKey(jobNumber))
 		{

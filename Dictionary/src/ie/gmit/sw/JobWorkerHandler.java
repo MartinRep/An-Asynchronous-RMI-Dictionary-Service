@@ -1,9 +1,11 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+// Singleton to pass variables between classes and also initializes the inQueue and outQueue. Also handles the ThreadPool
 
 public class JobWorkerHandler 
 {

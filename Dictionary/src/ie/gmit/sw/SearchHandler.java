@@ -1,4 +1,4 @@
-package com.gmit.ie;
+package ie.gmit.sw;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 /**
- * Servlet implementation class Dictionary
+ * Servlet implementation class Dictionary. This Servlet is a Facade for Find Directory Service
+ * On Initialization it calls JobWorkerHandler singleton to initialize inQueue and outQueue 
  */
 @WebServlet(asyncSupported = true, name = "Find-definition", description = "Word quering server", urlPatterns = { "/get" })
 public class SearchHandler extends HttpServlet {
@@ -28,7 +28,7 @@ public class SearchHandler extends HttpServlet {
 
        
 	public void init() throws ServletException {
-		ServletContext ctx = getServletContext(); //The servlet context is the application itself.
+		//ServletContext ctx = getServletContext(); //The servlet context is the application itself.
 		//Initialize JobWorersHandler singleton to share resorces across application
 		JobWorkerHandler.init(inQueue, outQueue); 
 	}
@@ -43,6 +43,7 @@ public class SearchHandler extends HttpServlet {
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * If statement determines state of the page. If user entered requested word or not yet.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
@@ -51,6 +52,7 @@ public class SearchHandler extends HttpServlet {
         out.println("<h1  align=\"center\">Search Dictionary</h1>");
         if(word == null) 
         {
+        	//Job number indicator
         	jobNumber++;
             thisJobNumber = jobNumber;
         	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </form> </div>");
@@ -73,7 +75,10 @@ public class SearchHandler extends HttpServlet {
         }
         
 	}
-	
+	/*
+	 * Safely destroys ThreadPool to avoid potenial memory leaks.
+	 * @see javax.servlet.GenericServlet#destroy()
+	 */
 	@Override
 	public void destroy()
 	{
