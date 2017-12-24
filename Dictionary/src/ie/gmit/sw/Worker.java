@@ -29,7 +29,6 @@ public class Worker implements Runnable
 		thisWorkerNumber = workerNumber;
 		workerNumber++;
 	}
-	
 
 	@Override
 	public void run() 
@@ -52,9 +51,6 @@ public class Worker implements Runnable
 					System.out.println(result);
 					//Output the results into outQueue HashMap
 					outQueue.put(job.getJobNumber(),result);
-					//devOnly
-					System.out.println("Workers map size: " + outQueue.size());
-					System.out.println();
 					break;
 					
 				case ADD:
@@ -63,8 +59,6 @@ public class Worker implements Runnable
 					System.out.println(succesfull);
 					//Output the results into outQueue HashMap
 					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
-					//devOnly
-					System.out.println("Workers map size: " + outQueue.size());
 					break;
 					
 				case MODIFY:
@@ -73,8 +67,6 @@ public class Worker implements Runnable
 					System.out.println(succesfull);
 					//Output the results into outQueue HashMap
 					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
-					//devOnly
-					System.out.println("Workers map size: " + outQueue.size());
 					break;
 				
 				case DELETE:
@@ -83,10 +75,10 @@ public class Worker implements Runnable
 					System.out.println(succesfull);
 					//Output the results into outQueue HashMap
 					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
-					//devOnly
-					System.out.println("Workers map size: " + outQueue.size());
 					break;
 			}
+			//devOnly
+			System.out.println("Workers map size: " + outQueue.size());
 		} catch (MalformedURLException | RemoteException | NotBoundException | InterruptedException e) {
 			System.out.printf("Job number: %d with Method: %s caused Exception: %s", job.getJobNumber(), job.getJobType(), e.toString());
 		}

@@ -3,7 +3,6 @@ package ie.gmit.sw;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -54,7 +53,7 @@ public class AddHandler extends HttpServlet {
         	thisJobNumber = jobWorkerHandler.getJobNumber();
         	out.println("<div align=\"center\"> <form> <label for=\"word\">Add Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </br> </br> <label for=\"definition\">Add Definition: </label> <input name=\"definition\" type=\"text\" placeholder=\"Enter definition here\"> <input name=\"jobNumber\" type=\"hidden\" value=\""+thisJobNumber +"\"> <input type=\"submit\" value=\"Submit\"></form> </div>");
 			//Home button
-			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
+			out.print("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
         }
         else
         {
@@ -63,10 +62,7 @@ public class AddHandler extends HttpServlet {
     		try {
 				inQueue.put(new Job(thisJobNumber, word, JobType.ADD, definition));
 				//Redirect to result polling page
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
-				request.setAttribute("word", word);
-	        	request.setAttribute("jobNumber", thisJobNumber);
-	        	dispatcher.forward(request,response);
+				response.sendRedirect("results?word=" + word + "&jobNumber="+ thisJobNumber);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

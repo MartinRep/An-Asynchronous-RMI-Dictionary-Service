@@ -3,7 +3,6 @@ package ie.gmit.sw;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
-//import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,7 +52,7 @@ public class SearchHandler extends HttpServlet {
 			thisJobNumber = jobWorkerHandler.getJobNumber();
         	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <input name=\"jobNumber\" type=\"hidden\" value=\""+thisJobNumber +"\"> <input type=\"submit\" value=\"Submit\">  </form> </div>");
 			//Home button
-			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
+			out.print("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
 		    
         }
         else
@@ -76,7 +75,7 @@ public class SearchHandler extends HttpServlet {
 		doGet(req, resp);
  	}
 	/*
-	 * Safely destroys ThreadPool to avoid potenial memory leaks.
+	 * Safely destroys ThreadPool to avoid potential memory leaks.
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
 	@Override

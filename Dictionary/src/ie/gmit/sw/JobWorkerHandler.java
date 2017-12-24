@@ -45,6 +45,7 @@ public class JobWorkerHandler
 	
 	public synchronized int getJobNumber()
 	{
+		jobNumber++;
 		return jobNumber;
 	}
 	
