@@ -17,11 +17,11 @@ import javax.servlet.http.HttpServletResponse;
  * Simple if statment determines if result is back from server or not
  */
 @WebServlet("/results")
-public class SearchPollHandler extends HttpServlet 
+public class PollHandler extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
 	private static ConcurrentHashMap<Integer, String> outQueue; 
-    public SearchPollHandler() 
+    public PollHandler() 
     {
         super();
     }
@@ -38,20 +38,21 @@ public class SearchPollHandler extends HttpServlet
 		PrintWriter out  = response.getWriter();
 		String word = request.getAttribute("word").toString();
 		int jobNumber = (int) request.getAttribute("jobNumber");
-		// Synchs outQueue HashMap with the rest of the application through JobWorkerHandler Singleton 
+		// Synch outQueue HashMap with the rest of the application through JobWorkerHandler Singleton 
 		outQueue = JobWorkerHandler.getOutQueue();
 		if(outQueue.containsKey(jobNumber))
 		{
 			//Display results
-			String definition = outQueue.get(jobNumber);
-			out.printf("<p  align=\"center\"><b>%s</b>: <div style=\"white-space: pre-wrap;\">%s</div></p>",word, definition);
+			String result = outQueue.remove(jobNumber);
+			out.printf("<p  align=\"center\"><b>%s</b>: <div style=\"white-space: pre-wrap;\">%s</div></p>",word, result);
 			out.println();
+			//Home button
 			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
 			
 		} else
 		{
 			response.setIntHeader("Refresh", 10);
-			out.printf("<p  align=\"center\">Looking for <b>%s</b>, please wait...</p>",word);
+			out.printf("<p  align=\"center\">Processing <b>%s</b>, please wait...</p>",word);
 			out.println();
 			out.printf("<p  align=\"center\">Job Number: <b>%d</b></p>",jobNumber);
 		}

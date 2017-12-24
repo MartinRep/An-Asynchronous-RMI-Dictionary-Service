@@ -13,26 +13,26 @@ public class JobWorkerHandler
 	private static ArrayBlockingQueue<Job> inQueue = new ArrayBlockingQueue<>(10);
 	private static ConcurrentHashMap<Integer, String> outQueue = new ConcurrentHashMap<>();
 	private static ExecutorService executor;
+	private static volatile int jobNumber = 0;
 	
-	private JobWorkerHandler(ArrayBlockingQueue<Job> inQueue, ConcurrentHashMap<Integer, String> outQueue)
+	private JobWorkerHandler()
 	{
-		JobWorkerHandler.inQueue = inQueue;
-		JobWorkerHandler.outQueue = outQueue;
 	}
 	
-	public static void init(ArrayBlockingQueue<Job> inQueue, ConcurrentHashMap<Integer, String> outQueue)
+	public static synchronized JobWorkerHandler init()
 	{
 		if(instance == null)
 		{
-			instance = new JobWorkerHandler(inQueue, outQueue);
+			instance = new JobWorkerHandler();
 			//also initialize actual workers 10 or so.
 			executor = Executors.newFixedThreadPool(10);
 			for (int i = 0; i < 10; i++) 
 			{
-				Runnable worker = new Worker(inQueue, outQueue);
+				Runnable worker = new Worker();
 				executor.execute(worker);
 			}
 		}
+		return instance;
 	}
 	
 	public static ArrayBlockingQueue<Job> getInQueue() {
@@ -43,6 +43,27 @@ public class JobWorkerHandler
 		return outQueue;
 	}
 	
+	public synchronized int getJobNumber()
+	{
+		System.out.println("JobWorkerHandler JobNumber: " + jobNumber);
+		jobNumber++;
+		int jN = jobNumber;
+		return jN;
+	}
+	
+	
+	
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		JobWorkerHandler.Shutdown();
+		super.finalize();
+	}
+
 	public static void Shutdown()
 	{
 		executor.shutdown();

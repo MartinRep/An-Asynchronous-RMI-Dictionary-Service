@@ -10,6 +10,8 @@ import java.rmi.server.UnicastRemoteObject;
 public class DbController extends UnicastRemoteObject implements DictionaryService{
 
 	private static final long serialVersionUID = 2L;
+	
+	private static FileService fileService = new FileService();
 
 	public DbController() throws RemoteException {
 		super();
@@ -19,8 +21,7 @@ public class DbController extends UnicastRemoteObject implements DictionaryServi
 	public String Lookup(String s) throws RemoteException {
 		// All the words in dictionary are all Capital.
 		String word = s.toUpperCase();
-		DbService dbService = new DbService();
-		String result = dbService.getDefinition(word);		
+		String result = fileService.getDefinition(word);		
 		// testing only Delay response by 10 second
 		try {
 			Thread.sleep(1000);
@@ -28,6 +29,25 @@ public class DbController extends UnicastRemoteObject implements DictionaryServi
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	public Boolean AddDefinition(String word, String definition) throws RemoteException {
+		word = word.toUpperCase();
+		System.out.println("Word: " + word + " Definition: "+ definition);
+		return fileService.AddDefinition(word, definition);
+	}
+
+	@Override
+	public Boolean ModifyDefinition(String word, String newDefinition) throws RemoteException {
+		word = word.toUpperCase();
+		return fileService.ModifyDefinition(word, newDefinition);
+	}
+
+	@Override
+	public Boolean DeleteDefinition(String word) throws RemoteException {
+		word = word.toUpperCase();
+		return fileService.DeleteDefinition(word);
 	}
 	
 

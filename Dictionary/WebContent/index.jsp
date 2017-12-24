@@ -13,7 +13,7 @@
 		</br></br>
 		<button onclick="window.location.href='put'">Add Definition</button>
 		</br></br>
-		<button onclick="window.location.href='post'">Modify Definition</button>
+		<button onclick="window.location.href='modify'">Modify Definition</button>
 		</br></br>
 		<button onclick="window.location.href='delete'">Delete Definition</button>
 	</div>

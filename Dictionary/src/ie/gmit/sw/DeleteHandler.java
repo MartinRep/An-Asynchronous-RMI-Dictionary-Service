@@ -15,25 +15,25 @@ import javax.servlet.http.HttpServletResponse;
  * Servlet implementation class Dictionary. This Servlet is a Facade for Find Directory Service
  * On Initialization it calls JobWorkerHandler singleton to initialize inQueue and outQueue 
  */
-@WebServlet(asyncSupported = true, name = "Find-definition", description = "Word quering server", urlPatterns = { "/get" })
-public class SearchHandler extends HttpServlet {
+@WebServlet(asyncSupported = true, name = "Delete-definition", description = "Word quering server", urlPatterns = { "/delete" })
+public class DeleteHandler extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ArrayBlockingQueue<Job> inQueue;
-	private int thisJobNumber = 0;
-	private JobWorkerHandler jobWorkerHandler;
+	private static ArrayBlockingQueue<Job> inQueue;
+	int thisJobNumber = 0;
+	JobWorkerHandler jobWorkerHandler;
 
        
 	public void init() throws ServletException {
 		//ServletContext ctx = getServletContext(); //The servlet context is the application itself.
-		//Initialize JobWorersHandler singleton to share resorces across application
+		//Initialize JobWorersHandler singleton to share resources across application
 		jobWorkerHandler = JobWorkerHandler.init();
-		System.out.println("Init");
+		inQueue = JobWorkerHandler.getInQueue();
 	}
 	
 	/**
      * @see HttpServlet#HttpServlet()
      */
-    public SearchHandler() 
+    public DeleteHandler() 
     {
         super();
     }
@@ -43,27 +43,24 @@ public class SearchHandler extends HttpServlet {
 	 * If statement determines state of the page. If user entered requested word or not yet.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Start: "+thisJobNumber);
-		inQueue = JobWorkerHandler.getInQueue();
 		response.setContentType("text/html");
         PrintWriter out  = response.getWriter();
         String word = request.getParameter("word");
-        out.println("<h1  align=\"center\">Search Dictionary</h1>");        
+        out.println("<h1  align=\"center\">Search Dictionary</h1>");
         if(word == null) 
         {
-        	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <br> <input type=\"submit\" value=\"Submit\"> </form> </div>");
+        	//Job number indicator
+        	thisJobNumber = jobWorkerHandler.getJobNumber();
+        	out.println("<div align=\"center\"> <form> <label for=\"word\">Delet the Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <br> <input type=\"submit\" value=\"Submit\"> </form> </div>");
 			//Home button
 			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
-		      //Job number indicator
-			thisJobNumber = jobWorkerHandler.getJobNumber();
-			System.out.println("just aquired: "+thisJobNumber);
         }
         else
         {
         	System.out.println(thisJobNumber);
         	//Put job in a blocking queue
     		try {
-				inQueue.put(new Job(thisJobNumber, word, JobType.GET));
+				inQueue.put(new Job(thisJobNumber, word, JobType.DELETE));
 				//Redirect to result polling page
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
 				request.setAttribute("word", word);
@@ -77,7 +74,7 @@ public class SearchHandler extends HttpServlet {
         
 	}
 	/*
-	 * Safely destroys ThreadPool to avoid potenial memory leaks.
+	 * Safely destroys ThreadPool to avoid potential memory leaks.
 	 * @see javax.servlet.GenericServlet#destroy()
 	 */
 	@Override

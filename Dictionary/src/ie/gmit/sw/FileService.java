@@ -5,11 +5,12 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-public class DbService {
+public class FileService {
 	private static HashMap<String, String> dictinary = new HashMap<>();
 	private static String word = null;
 	String fileName = "dict.txt";
-	public DbService() 
+	
+	public FileService() 
 	{
 		if(dictinary.size() == 0) ProcessFile();
 	}
@@ -19,9 +20,30 @@ public class DbService {
 		return dictinary.getOrDefault(word, "String not found");
 	}
 
-	/*
-	 * */
-
+	public Boolean AddDefinition(String word, String definition)
+	{
+		if(dictinary.put(word, definition) != null) return true;
+		return false;
+	}
+	
+	public Boolean ModifyDefinition(String word, String newDefinition)
+	{
+		if(dictinary.containsKey(word))
+		{
+			if(dictinary.replace(word, newDefinition) != null) return true;
+		}
+		return false;
+	}
+	
+	public Boolean DeleteDefinition(String word)
+	{
+		if(dictinary.containsKey(word))
+		{
+			if(dictinary.remove(word) != null) return true;
+		}
+		return false;
+	}
+	
 	public static void ProcessFile()
 	{
 		// Open the file
