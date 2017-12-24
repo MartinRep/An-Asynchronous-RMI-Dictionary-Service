@@ -51,12 +51,14 @@ public class AddHandler extends HttpServlet {
         if(word == null || definition == null) 
         {
         	//Job number indicator
-        	out.println("<div align=\"center\"> <form> <label for=\"word\">Add Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </br> </br> <label for=\"definition\">Add Definition: </label> <input name=\"definition\" type=\"text\" placeholder=\"Enter definition here\"> <input type=\"submit\" value=\"Submit\"></form> </div>");
+        	thisJobNumber = jobWorkerHandler.getJobNumber();
+        	out.println("<div align=\"center\"> <form> <label for=\"word\">Add Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> </br> </br> <label for=\"definition\">Add Definition: </label> <input name=\"definition\" type=\"text\" placeholder=\"Enter definition here\"> <input name=\"jobNumber\" type=\"hidden\" value=\""+thisJobNumber +"\"> <input type=\"submit\" value=\"Submit\"></form> </div>");
 			//Home button
 			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
         }
         else
         {
+        	thisJobNumber = Integer.parseInt(request.getParameter("jobNumber"));
         	//Put job in a blocking queue
     		try {
 				inQueue.put(new Job(thisJobNumber, word, JobType.ADD, definition));

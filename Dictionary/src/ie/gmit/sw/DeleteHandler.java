@@ -51,13 +51,13 @@ public class DeleteHandler extends HttpServlet {
         {
         	//Job number indicator
         	thisJobNumber = jobWorkerHandler.getJobNumber();
-        	out.println("<div align=\"center\"> <form> <label for=\"word\">Delet the Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <br> <input type=\"submit\" value=\"Submit\"> </form> </div>");
+        	out.println("<div align=\"center\"> <form> <label for=\"word\">Delete the Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <input name=\"jobNumber\" type=\"hidden\" value=\""+thisJobNumber +"\"> <br> <input type=\"submit\" value=\"Submit\"> </form> </div>");
 			//Home button
 			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
         }
         else
         {
-        	System.out.println(thisJobNumber);
+        	thisJobNumber = Integer.parseInt(request.getParameter("jobNumber"));
         	//Put job in a blocking queue
     		try {
 				inQueue.put(new Job(thisJobNumber, word, JobType.DELETE));

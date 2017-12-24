@@ -27,7 +27,7 @@ public class SearchHandler extends HttpServlet {
 		//ServletContext ctx = getServletContext(); //The servlet context is the application itself.
 		//Initialize JobWorersHandler singleton to share resorces across application
 		jobWorkerHandler = JobWorkerHandler.init();
-		System.out.println("Init");
+
 	}
 	
 	/**
@@ -43,24 +43,23 @@ public class SearchHandler extends HttpServlet {
 	 * If statement determines state of the page. If user entered requested word or not yet.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Start: "+thisJobNumber);
-		inQueue = JobWorkerHandler.getInQueue();
+		inQueue=JobWorkerHandler.getInQueue();
 		response.setContentType("text/html");
         PrintWriter out  = response.getWriter();
         String word = request.getParameter("word");
         out.println("<h1  align=\"center\">Search Dictionary</h1>");        
         if(word == null) 
         {
-        	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <br> <input type=\"submit\" value=\"Submit\"> </form> </div>");
+        	//Job number indicator
+			thisJobNumber = jobWorkerHandler.getJobNumber();
+        	out.println("<div align=\"center\"> <form> <label for=\"word\">Search for Word: </label> <input name=\"word\" type=\"text\" placeholder=\"Enter word here\" required autofocus> <input name=\"jobNumber\" type=\"hidden\" value=\""+thisJobNumber +"\"> <input type=\"submit\" value=\"Submit\">  </form> </div>");
 			//Home button
 			out.printf("<p  align=\"center\"><button onclick=\"window.location.href=' /Dictionary/'\">Home</button></p>");
-		      //Job number indicator
-			thisJobNumber = jobWorkerHandler.getJobNumber();
-			System.out.println("just aquired: "+thisJobNumber);
+		    
         }
         else
         {
-        	System.out.println(thisJobNumber);
+        	thisJobNumber = Integer.parseInt(request.getParameter("jobNumber"));
         	//Put job in a blocking queue
     		try {
 				inQueue.put(new Job(thisJobNumber, word, JobType.GET));
@@ -76,6 +75,10 @@ public class SearchHandler extends HttpServlet {
         }
         
 	}
+	
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
+ 	}
 	/*
 	 * Safely destroys ThreadPool to avoid potenial memory leaks.
 	 * @see javax.servlet.GenericServlet#destroy()
