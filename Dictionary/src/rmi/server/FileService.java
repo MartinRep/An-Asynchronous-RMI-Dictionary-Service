@@ -1,4 +1,4 @@
-package ie.gmit.sw;
+package rmi.server;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

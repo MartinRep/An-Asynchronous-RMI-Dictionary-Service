@@ -1,4 +1,4 @@
-package ie.gmit.sw;
+package rmi.server;
 
 /*
  * This class controls access to the virtual Db. Implements Custom remote interface. It's called through RMI 
@@ -6,6 +6,8 @@ package ie.gmit.sw;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
+import ie.gmit.sw.DictionaryService;
 
 public class DbController extends UnicastRemoteObject implements DictionaryService{
 
