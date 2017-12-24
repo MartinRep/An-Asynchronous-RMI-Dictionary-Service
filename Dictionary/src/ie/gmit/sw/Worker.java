@@ -13,33 +13,36 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Worker implements Runnable
 {
-	private ArrayBlockingQueue<Job> inQueue;
-	private ConcurrentHashMap<Integer, String> outQueue;
+	private static ArrayBlockingQueue<Job> inQueue;
+	private static ConcurrentHashMap<Integer, String> outQueue ;
 	private DictionaryService dictionaryService;
 	private Job job;
 	Boolean succesfull = null;
+	private static int workerNumber = 0;
+	private int thisWorkerNumber;
 	
 	public Worker() 
 	{
 		super();
+		inQueue = JobWorkerHandler.getInQueue();
+		outQueue = JobWorkerHandler.getOutQueue();
+		thisWorkerNumber = workerNumber;
+		workerNumber++;
 	}
 	
 
 	@Override
 	public void run() 
 	{	
-		while(true)
-		{
 		try {
-			this.inQueue = JobWorkerHandler.getInQueue();
-			this.outQueue = JobWorkerHandler.getOutQueue();
 			//takes job from the BlockingQueue
 			job = inQueue.take();
 			//dev only
 			System.out.println("Job number: "+job.getJobNumber());
 			System.out.println("Word: "+ job.getWord());
-			System.out.println("definition: " + job.getDefinition());
 			System.out.println("Job Type: " + job.getJobType());
+			System.out.println("definition: " + job.getDefinition());
+			System.out.println("Worker Number: " + thisWorkerNumber);
 			//Gets the results from remote server
 			switch(job.getJobType())
 			{
@@ -51,6 +54,7 @@ public class Worker implements Runnable
 					outQueue.put(job.getJobNumber(),result);
 					//devOnly
 					System.out.println("Workers map size: " + outQueue.size());
+					System.out.println();
 					break;
 					
 				case ADD:
@@ -85,7 +89,6 @@ public class Worker implements Runnable
 			}
 		} catch (MalformedURLException | RemoteException | NotBoundException | InterruptedException e) {
 			System.out.printf("Job number: %d with Method: %s caused Exception: %s", job.getJobNumber(), job.getJobType(), e.toString());
-		}
 		}
 	}
 	//Actual RMI calling method.

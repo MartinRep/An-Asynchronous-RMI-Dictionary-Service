@@ -28,7 +28,9 @@ public class PollHandler extends HttpServlet
 
 
 	public void init(ServletConfig config) throws ServletException 
-	{}
+	{
+		outQueue = JobWorkerHandler.getOutQueue();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,14 +38,13 @@ public class PollHandler extends HttpServlet
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out  = response.getWriter();
-		String word = request.getAttribute("word").toString();
-		int jobNumber = (int) request.getAttribute("jobNumber");
-		// Synch outQueue HashMap with the rest of the application through JobWorkerHandler Singleton 
-		outQueue = JobWorkerHandler.getOutQueue();
+		String word = request.getParameter("word");
+		int jobNumber = Integer.parseInt(request.getParameter("jobNumber")); 
 		if(outQueue.containsKey(jobNumber))
 		{
+			// Getting result value as well removing it from shared Hashmap, not just from Servlet copy
+			String result = JobWorkerHandler.getResult(jobNumber);
 			//Display results
-			String result = outQueue.remove(jobNumber);
 			out.printf("<p  align=\"center\"><b>%s</b>: <div style=\"white-space: pre-wrap;\">%s</div></p>",word, result);
 			out.println();
 			//Home button

@@ -3,7 +3,7 @@ package ie.gmit.sw;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
-import javax.servlet.RequestDispatcher;
+//import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +27,6 @@ public class SearchHandler extends HttpServlet {
 		//ServletContext ctx = getServletContext(); //The servlet context is the application itself.
 		//Initialize JobWorersHandler singleton to share resorces across application
 		jobWorkerHandler = JobWorkerHandler.init();
-
 	}
 	
 	/**
@@ -64,10 +63,7 @@ public class SearchHandler extends HttpServlet {
     		try {
 				inQueue.put(new Job(thisJobNumber, word, JobType.GET));
 				//Redirect to result polling page
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/results");
-				request.setAttribute("word", word);
-	        	request.setAttribute("jobNumber", thisJobNumber);
-	        	dispatcher.forward(request,response);
+	        	response.sendRedirect("results?word=" + word + "&jobNumber="+ thisJobNumber);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

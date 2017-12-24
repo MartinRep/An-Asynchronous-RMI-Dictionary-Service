@@ -35,7 +35,7 @@ public class JobWorkerHandler
 		return instance;
 	}
 	
-	public static ArrayBlockingQueue<Job> getInQueue() {
+	public static synchronized ArrayBlockingQueue<Job> getInQueue() {
 		return inQueue;
 	}
 
@@ -45,14 +45,14 @@ public class JobWorkerHandler
 	
 	public synchronized int getJobNumber()
 	{
-		System.out.println("JobWorkerHandler JobNumber: " + jobNumber);
-		jobNumber++;
-		int jN = jobNumber;
-		return jN;
+		return jobNumber;
 	}
 	
-	
-	
+	public static String getResult(int jobNumber)
+	{
+		return outQueue.remove(jobNumber);
+	}
+		
 	@Override
 	public int hashCode() {
 		return super.hashCode();
