@@ -8,11 +8,26 @@ Java EE project for Distributed systems module.
 ## Architecture
 Project File Structure
 
-### Server
+### RMI Server
 
-File `DictionaryServer.java` contains runnable main method. This invokes RMI register and bind `DbController` class to `dictionaryServer` through custom Remote interface `DictionaryService`.
+File `dictionary-service.java` contains runnable main method. This invokes RMI register and bind `DbController` class to `dictionaryServer` through custom Remote interface `DictionaryService`.
 The DbController then initialize `DbService` class and calls `getDefinition` method. After retreiving data it waits for 10 seconds to simulate heavy server usage.
-Class DbServer contains method 'ProcessFile'.  
-This method will populate HashMap with about 700 word to definition. **This must run pior to initial use.** otherwise all the queries will return "String not found".
+Class DbServer contains method `ProcessFile` which will process text file `dict.txt` into hashmap.  
+This method will populate HashMap with about 700 word to definition. **This will run pior to initial use.** otherwise all the queries will return "String not found".
+
+### RMI Client
+
+File `Dictionary.war` contains Dynamic Web aplication. `Index.jsp` navigate to 4 options. Each with own servlet. Each will add job to inQueue Blocking queue. 10 workers are running in ThreadPool will procsess the request with RMI Server and return result to outQueue Concurrent Hash Map.
 
 
+## Instalation
+
+### RMI Server
+
+Run `java -jar dictionary-service.java` in console.
+
+### RMI Client
+
+copy `Dictionary.war` file into Tomcat's `webapps` folder. Tomcat, if running, will expand war file into folder.
+
+## Usage
