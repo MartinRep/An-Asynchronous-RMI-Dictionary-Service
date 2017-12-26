@@ -20,6 +20,7 @@ public class Worker implements Runnable
 	Boolean succesfull = null;
 	private static int workerNumber = 0;
 	private int thisWorkerNumber;
+	String result;
 	
 	public Worker() 
 	{
@@ -46,37 +47,36 @@ public class Worker implements Runnable
 			switch(job.getJobType())
 			{
 				case GET:
-					String result = RMILookup(job.getWord());
+					result = RMILookup(job.getWord());
 					//dev only
 					System.out.println(result);
 					//Output the results into outQueue HashMap
-					outQueue.put(job.getJobNumber(),result);
+					
 					break;
 					
 				case ADD:
 					succesfull = RMIAddDefinition(job.getWord(), job.getDefinition());
+					if(succesfull) result = "Succesfull";
 					//dev only
 					System.out.println(succesfull);
 					//Output the results into outQueue HashMap
-					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
 					break;
 					
 				case MODIFY:
 					succesfull = RMIModifyDefinition(job.getWord(), job.getDefinition());
+					if(succesfull) result = "Succesfull";
 					//dev only
 					System.out.println(succesfull);
-					//Output the results into outQueue HashMap
-					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
 					break;
 				
 				case DELETE:
 					succesfull = RMIDeleteDefinition(job.getWord());
+					if(succesfull) result = "Succesfull";
 					//dev only
 					System.out.println(succesfull);
-					//Output the results into outQueue HashMap
-					if(succesfull != null) outQueue.put(job.getJobNumber(), succesfull.toString());
 					break;
 			}
+			outQueue.put(job.getJobNumber(),result);
 			//devOnly
 			System.out.println("Workers map size: " + outQueue.size());
 		} catch (MalformedURLException | RemoteException | NotBoundException | InterruptedException e) {

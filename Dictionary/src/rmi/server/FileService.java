@@ -22,26 +22,22 @@ public class FileService {
 
 	public Boolean AddDefinition(String word, String definition)
 	{
-		if(dictinary.put(word, definition) != null) return true;
-		return false;
+		dictinary.put(word, definition);
+		return true;
 	}
 	
 	public Boolean ModifyDefinition(String word, String newDefinition)
 	{
-		if(dictinary.containsKey(word))
-		{
-			if(dictinary.replace(word, newDefinition) != null) return true;
-		}
-		return false;
+		dictinary.replace(word, newDefinition);
+		return true;
 	}
 	
 	public Boolean DeleteDefinition(String word)
 	{
-		if(dictinary.containsKey(word))
-		{
-			if(dictinary.remove(word) != null) return true;
-		}
-		return false;
+		
+		dictinary.remove(word);
+		return true;
+		
 	}
 	
 	public static void ProcessFile()
