@@ -31,3 +31,7 @@ Run `java -jar dictionary-service.java` in console.
 copy `Dictionary.war` file into Tomcat's `webapps` folder. Tomcat, if running, will expand war file into folder.
 
 ## Usage
+
+After Instalation navigate your browser to `http://localhost:8080/Dictionary/` and start using the service. Note the port number, your Tomcat service can be running on different one.
+
+![Demo](https://github.com/MartinRep/An-Asynchronous-RMI-Dictionary-Service/blob/master/git-Assets/Dictionary-Demo.gif)
